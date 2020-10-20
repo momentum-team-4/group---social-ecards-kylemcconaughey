@@ -15,6 +15,9 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     posts = serializers.HyperlinkedRelatedField(
         many=True, view_name="post-detail", read_only=True
     )
+    comments = serializers.HyperlinkedRelatedField(
+        many=True, view_name="comment-detail", read_only=True
+    )
 
     class Meta:
         model = User

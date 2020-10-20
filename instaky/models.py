@@ -98,7 +98,8 @@ class Post(models.Model):
         return False
 
     def __str__(self):
-        return f"{self.inner_text}"
+        return f"{self.id}"
+        # this needs to change, maybe? idk how we should specify which post to link comments to
 
 
 class Comment(models.Model):

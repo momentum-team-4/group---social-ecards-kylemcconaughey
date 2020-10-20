@@ -64,7 +64,7 @@ class CommentViewSet(ModelViewSet):
     def perform_create(self, serializer):
         if not self.request.user.is_authenticated:
             raise PermissionDenied()
-        serializer.save(author=self.request.user)
+        serializer.save(user=self.request.user)
 
 
 class UserViewSet(ModelViewSet):
