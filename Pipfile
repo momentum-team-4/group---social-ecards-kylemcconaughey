@@ -18,6 +18,7 @@ djangorestframework = "*"
 markdown = "*"
 django-filter = "*"
 djoser = "*"
+django-heroku = "*"
 
 [requires]
 python_version = "3.8"

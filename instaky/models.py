@@ -12,6 +12,8 @@ class Post(models.Model):
 
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="posts")
 
+    is_public = models.BooleanField(null=False, blank=False, default=True)
+
     CARD_COLOR_CHOICES = [
         (0, "White"),
         (1, "Red"),
@@ -39,6 +41,31 @@ class Post(models.Model):
     border_style = models.CharField(
         max_length=1,
         choices=BORDER_STYLE_CHOICES,
+        default=0,
+    )
+
+    FONT_STYLE_CHOICES = [
+        (0, "Comic Sans"),
+        (1, "Papyrus"),
+        (2, "Wingdings"),
+    ]
+
+    font_style = models.CharField(
+        max_length=1,
+        choices=FONT_STYLE_CHOICES,
+        default=0,
+    )
+
+    TEXT_ALIGN_CHOICES = [
+        (0, "Left"),
+        (1, "Right"),
+        (2, "Center"),
+        (3, "Justified"),
+    ]
+
+    text_align = models.CharField(
+        max_length=1,
+        choices=TEXT_ALIGN_CHOICES,
         default=0,
     )
 
