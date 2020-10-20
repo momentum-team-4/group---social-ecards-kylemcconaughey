@@ -16,9 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.urls import include, path
+from instaky import views as instaky_views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('auth/', include('djoser.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('example/', circle_views.ExampleView.as_view(), name="example"),
+    path('auth/', include('djoser.urls.authtoken')),
 ]
 
 if settings.DEBUG:

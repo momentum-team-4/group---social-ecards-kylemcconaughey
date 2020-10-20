@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     # Third-party
     'debug_toolbar',
     'django_extensions',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
 
     # Project-specific
     'users',
@@ -144,3 +147,11 @@ INTERNAL_IPS = [
 import django_heroku
 django_heroku.settings(locals())
 del DATABASES['default']['OPTIONS']['sslmode']
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
