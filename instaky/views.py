@@ -1,5 +1,6 @@
 from django.core.exceptions import PermissionDenied
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import permissions
 from .models import Post, Comment
 from .serializers import CommentSerializer, PostSerializer, UserSerializer
@@ -19,28 +20,28 @@ DELETE	/friends/:user_id	-	-	||| removes user with specified id from your friend
 """
 
 
-class WroteOrRead(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        if request.user.is_authenticated:
-            return True
+# class WroteOrRead(permissions.BasePermission):
+#     def has_permission(self, request, view):
+#         if request.method in permissions.SAFE_METHODS:
+#             return True
+#         if request.user.is_authenticated:
+#             return True
 
-        return False
+#         return False
 
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        if obj.user == request.user:
-            return True
+#     def has_object_permission(self, request, view, obj):
+#         if request.method in permissions.SAFE_METHODS:
+#             return True
+#         if obj.user == request.user:
+#             return True
 
-        return False
+#         return False
 
 
 class PostViewSet(ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = [
-        WroteOrRead,
+        IsAuthenticated,
     ]
 
     def get_queryset(self):
@@ -55,7 +56,7 @@ class PostViewSet(ModelViewSet):
 class CommentViewSet(ModelViewSet):
     serializer_class = CommentSerializer
     permission_classes = [
-        WroteOrRead,
+        IsAuthenticated,
     ]
 
     def get_queryset(self):
@@ -70,7 +71,7 @@ class CommentViewSet(ModelViewSet):
 class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [
-        WroteOrRead,
+        IsAuthenticated,
     ]
 
     def get_queryset(self):
