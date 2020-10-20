@@ -31,13 +31,13 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Post
         fields = [
+            "user",
+            "is_public",
             "outer_text",
             "inner_text",
             "posted_at",
-            "user",
             "id",
             "url",
-            "is_public",
             "card_color",
             "border_style",
             "font_style",
