@@ -20,24 +20,6 @@ DELETE	/friends/:user_id	-	-	||| removes user with specified id from your friend
 """
 
 
-# class WroteOrRead(permissions.BasePermission):
-#     def has_permission(self, request, view):
-#         if request.method in permissions.SAFE_METHODS:
-#             return True
-#         if request.user.is_authenticated:
-#             return True
-
-#         return False
-
-#     def has_object_permission(self, request, view, obj):
-#         if request.method in permissions.SAFE_METHODS:
-#             return True
-#         if obj.user == request.user:
-#             return True
-
-#         return False
-
-
 class PostViewSet(ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = [

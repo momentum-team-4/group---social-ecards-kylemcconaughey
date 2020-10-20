@@ -1,7 +1,5 @@
-1) How do I set booleans via API/Insomnia?
+1) How best to set up DM-ing? A new Messaging model? Something within the User model?
 
-2) How best to set up DM-ing? A new Messaging model? Something within the User model?
+2) Is *_STYLE_CHOICES = [] good, or should I use models.Choices()? If so, how?
 
-3) Is *_STYLE_CHOICES = [] good, or should I use models.Choices()? If so, how?
-
-4) Is it possible to let the user choose between using default images from Unsplash API OR uploading their own? Would that need to be two seperate attributes within the Post class, with a third pointing to which, or would it be one image storage attribute with the choices made in front-end?
+3) Is it possible to let the user choose between using default images from Unsplash API OR uploading their own? Would that need to be two seperate attributes within the Post class, with a third pointing to which, or would it be one image storage attribute with the choices made in front-end?
