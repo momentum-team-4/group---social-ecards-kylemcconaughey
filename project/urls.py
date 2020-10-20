@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),
     path('api-auth/', include('rest_framework.urls')),
-    path('example/', circle_views.ExampleView.as_view(), name="example"),
+    path('example/', instaky_views.ExampleView.as_view(), name="example"),
     path('auth/', include('djoser.urls.authtoken')),
 ]
 
