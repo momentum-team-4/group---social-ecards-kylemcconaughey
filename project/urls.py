@@ -20,18 +20,18 @@ from instaky import views as instaky_views
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('auth/', include('djoser.urls')),
-    path('api-auth/', include('rest_framework.urls')),
-    path('example/', instaky_views.ExampleView.as_view(), name="example"),
-    path('auth/', include('djoser.urls.authtoken')),
+    path("admin/", admin.site.urls),
+    path("auth/", include("djoser.urls")),
+    path("api-auth/", include("rest_framework.urls")),
+    path("auth/", include("djoser.urls.authtoken")),
+    path("", include("instaky.urls")),
 ]
 
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns = [
-        path('__debug__/', include(debug_toolbar.urls)),
 
+    urlpatterns = [
+        path("__debug__/", include(debug_toolbar.urls)),
         # For django versions before 2.0:
         # url(r'^__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns
