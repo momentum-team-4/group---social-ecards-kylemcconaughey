@@ -69,6 +69,19 @@ class Post(models.Model):
         default=0,
     )
 
+    FONT_SIZE_CHOICES = [
+        (0, "Small"),
+        (1, "Medium"),
+        (2, "Large"),
+        (3, "XXXtra Large"),
+    ]
+
+    font_size = models.CharField(
+        max_length=1,
+        choices=FONT_SIZE_CHOICES,
+        default=0,
+    )
+
     # image = models.FileField()
 
     def nicePosted(self):
