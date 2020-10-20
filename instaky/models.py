@@ -1,6 +1,5 @@
 from django.db import models
 from users.models import User
-from datetime import timedelta
 
 
 class Post(models.Model):
@@ -84,16 +83,12 @@ class Post(models.Model):
 
     # image = models.FileField()
 
-    def nicePosted(self):
-        nice_posted = self.posted_at - timedelta(hours=4)
-        return nice_posted.strftime("%A, %b %d at %I:%M %p")
-
     favorited_by = models.ManyToManyField(
         to=User, related_name="favorited_posts", blank=True
     )
 
     def isFavorited(self):
-        if self.user in self.user.starred_questions.all():
+        if self in self.user.favorited_posts.all():
             return True
         return False
 
@@ -115,9 +110,10 @@ class Comment(models.Model):
         to=User, related_name="favorited_comments", blank=True
     )
 
-    def nicePosted(self):
-        nice_posted = self.posted_at - timedelta(hours=4)
-        return nice_posted.strftime("%A, %b %d at %I:%M %p")
+    def isFavorited(self):
+        if self in self.user.favorited_comments.all():
+            return True
+        return False
 
     def __str__(self):
         return f"{self.body}"
