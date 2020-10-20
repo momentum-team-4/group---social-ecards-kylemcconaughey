@@ -58,3 +58,7 @@ class UserViewSet(ModelViewSet):
 
     def get_queryset(self):
         return User.objects.all()
+
+
+
+# Test
