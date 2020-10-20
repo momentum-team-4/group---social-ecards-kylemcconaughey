@@ -7,16 +7,18 @@ from .serializers import CommentSerializer, PostSerializer, UserSerializer
 from users.models import User
 
 """
-GET	/cards/	-	list of cards from users you follow	
+GET	/cards/	-	    list of cards from users you follow	
 GET	/cards/me/	-	list of cards you have made	||| could use /cards/?list=mine or something like that
-GET	/cards/all/	-	list of cards for everyone |||	could use /cards/?list=all
-POST	/cards/	card data	new card |||  creates a card
+GET	/cards/all/	-	list of cards for everyone  |||	could use /cards/?list=all
+
+POST /cards/	    card data	new card        |||  creates a card
 GET	/cards/:id/	-	data for card with specified id	
-PATCH	/cards/:id/	card data	updated card ||| updates the card with specified id
-DELETE	/cards/:id/	-	-	||| deletes card with specified id
+PATCH /cards/:id/	card data	updated card    ||| updates the card with specified id
+DELETE /cards/:id/	-	-	                    ||| deletes card with specified id
+
 GET	/friends/	-	list of all your "friends"	
-POST	/friends/	user by id	user info ||| add user as a friend
-DELETE	/friends/:user_id	-	-	||| removes user with specified id from your friends
+POST /friends/	user by id	user info       ||| add user as a friend
+DELETE /friends/:user_id	-	-	            ||| removes user with specified id from your friends
 """
 
 

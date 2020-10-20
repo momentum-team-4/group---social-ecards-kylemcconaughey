@@ -3,3 +3,5 @@
 2) Is *_STYLE_CHOICES = [] good, or should I use models.Choices()? If so, how?
 
 3) Is it possible to let the user choose between using default images from Unsplash API OR uploading their own? Would that need to be two seperate attributes within the Post class, with a third pointing to which, or would it be one image storage attribute with the choices made in front-end?
+
+4) Can we fork?
