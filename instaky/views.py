@@ -29,7 +29,7 @@ class CardViewSet(ModelViewSet):
     ]
 
     def get_queryset(self):
-        return Card.objects.all()
+        return Card.objects.all().order_by("-posted_at")
 
     def perform_create(self, serializer):
         if self.request.user.is_authenticated:
