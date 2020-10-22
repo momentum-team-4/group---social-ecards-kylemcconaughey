@@ -2,8 +2,8 @@ from django.core.exceptions import PermissionDenied
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import permissions
-from .models import Post, Comment
-from .serializers import CommentSerializer, PostSerializer, UserSerializer
+from .models import Card, Comment
+from .serializers import CommentSerializer, CardSerializer, UserSerializer
 from users.models import User
 
 """
@@ -22,14 +22,14 @@ DELETE /friends/:user_id	-	-	            ||| removes user with specified id from
 """
 
 
-class PostViewSet(ModelViewSet):
-    serializer_class = PostSerializer
+class CardViewSet(ModelViewSet):
+    serializer_class = CardSerializer
     permission_classes = [
         IsAuthenticated,
     ]
 
     def get_queryset(self):
-        return Post.objects.all()
+        return Card.objects.all()
 
     def perform_create(self, serializer):
         if self.request.user.is_authenticated:
@@ -60,7 +60,3 @@ class UserViewSet(ModelViewSet):
 
     def get_queryset(self):
         return User.objects.all()
-
-
-
-# Test

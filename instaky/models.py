@@ -2,105 +2,120 @@ from django.db import models
 from users.models import User
 
 
-class Post(models.Model):
+class Card(models.Model):
     outer_text = models.CharField(max_length=255, null=False, blank=False)
 
     inner_text = models.CharField(max_length=255, null=False, blank=False)
 
     posted_at = models.DateTimeField(auto_now_add=True)
 
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="posts")
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="cards")
 
     is_public = models.BooleanField(null=False, blank=False, default=True)
 
-    CARD_COLOR_CHOICES = [
-        (0, "White"),
-        (1, "Red"),
-        (2, "Orange"),
-        (3, "Yellow"),
-        (4, "Green"),
-        (5, "Blue"),
-        (6, "Indigo"),
-        (7, "Violet"),
-        (8, "Black"),
-    ]
+    class CardColorChoices(models.TextChoices):
+        WHITE = "WH", ("White")
+        BLACK = "BL", ("Black")
+        RED = "RD", ("Red")
+        ORANGE = "OR", ("Orange")
+        YELLOW = "YE", ("Yellow")
+        GREEN = "GR", ("Green")
+        BLUE = "BL", ("Blue")
+        INDIGO = "IN", ("Indigo")
+        VIOLET = "VI", ("Violet")
+        TEAL = "TE", ("Teal")
 
     card_color = models.CharField(
-        max_length=1,
-        choices=CARD_COLOR_CHOICES,
-        default=0,
+        max_length=2,
+        choices=CardColorChoices.choices,
+        default=CardColorChoices.WHITE,
     )
 
-    BORDER_STYLE_CHOICES = [
-        (0, "tbd"),
-        (1, "tbd"),
-        (2, "etc"),
-    ]
+    class BorderStyleChoices(models.IntegerChoices):
+        SOLID = 0, ("Solid")
+        DASHED = 1, ("Dashed")
+        DOTTED = 2, ("Dotted")
+        DOUBLE = 3, ("Double")
 
     border_style = models.CharField(
         max_length=1,
-        choices=BORDER_STYLE_CHOICES,
-        default=0,
+        choices=BorderStyleChoices.choices,
+        default=BorderStyleChoices.SOLID,
     )
 
-    FONT_STYLE_CHOICES = [
-        (0, "Comic Sans"),
-        (1, "Papyrus"),
-        (2, "Wingdings"),
-    ]
+    class FontFamilyChoices(models.CharField):
+        SERIF = "SE", ("Serif")
+        SANSERIF = "SS", ("Sans-Serif")
+
+    font_family = models.CharField(
+        max_length=2,
+        choices=FontFamilyChoices.choices,
+        default=FontFamilyChoices.SANSERIF,
+    )
+
+    class FontStyleChoices(models.CharField):
+        ITALICS = "I", ("Italics")
+        BOLD = "B", ("Bold")
+        UNDERLINE = "U", ("Underline")
 
     font_style = models.CharField(
-        max_length=1,
-        choices=FONT_STYLE_CHOICES,
-        default=0,
+        max_length=1, choices=FontStyleChoices.choices, default=FontStyleChoices.ITALICS
     )
 
-    TEXT_ALIGN_CHOICES = [
-        (0, "Left"),
-        (1, "Right"),
-        (2, "Center"),
-        (3, "Justified"),
-    ]
+    class TextAlignChoices(models.CharField):
+        LEFT = "L", ("Left")
+        RIGHT = "R", ("Right")
+        CENTER = "C", ("Center")
+        JUSTIFIED = (
+            "J",
+            ("Justified"),
+        )
 
     text_align = models.CharField(
         max_length=1,
-        choices=TEXT_ALIGN_CHOICES,
-        default=0,
+        choices=TextAlignChoices.choices,
+        default=TextAlignChoices.LEFT,
     )
 
-    FONT_SIZE_CHOICES = [
-        (0, "Small"),
-        (1, "Medium"),
-        (2, "Large"),
-        (3, "XXXtra Large"),
-    ]
+    class FontSizeChoices(models.IntegerChoices):
+        SMALL = (
+            "0",
+            ("Small"),
+        )
+        MEDIUM = (
+            "1",
+            ("Medium"),
+        )
+        LARGE = (
+            "2",
+            ("Large"),
+        )
+        XLARGE = (
+            "3",
+            ("Xtra Large"),
+        )
 
-    font_size = models.CharField(
+    font_size = models.IntegerChoices(
         max_length=1,
-        choices=FONT_SIZE_CHOICES,
-        default=0,
+        choices=FontSizeChoices.choices,
+        default=FontSizeChoices.MEDIUM,
     )
 
     # image = models.FileField()
 
     favorited_by = models.ManyToManyField(
-        to=User, related_name="favorited_posts", blank=True
+        to=User, related_name="favorited_cards", blank=True
     )
-
-    def isFavorited(self):
-        if self in self.user.favorited_posts.all():
-            return True
-        return False
 
     def __str__(self):
         return f"{self.id}"
-        # this needs to change, maybe? idk how we should specify which post to link comments to
+        # this needs to change, maybe? idk how we should specify which card to link comments to
 
 
 class Comment(models.Model):
     body = models.CharField(max_length=255, blank=False, null=False)
 
-    post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name="comments")
+    card = models.ForeignKey(to=Card, on_delete=models.CASCADE, related_name="comments")
 
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="comments")
 
@@ -109,11 +124,6 @@ class Comment(models.Model):
     favorited_by = models.ManyToManyField(
         to=User, related_name="favorited_comments", blank=True
     )
-
-    def isFavorited(self):
-        if self in self.user.favorited_comments.all():
-            return True
-        return False
 
     def __str__(self):
         return f"{self.body}"
