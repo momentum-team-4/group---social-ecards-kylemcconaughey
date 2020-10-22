@@ -15,7 +15,7 @@ class Card(models.Model):
 
     class CardColorChoices(models.TextChoices):
         WHITE = "WH", ("White")
-        BLACK = "BL", ("Black")
+        BLACK = "BK", ("Black")
         RED = "RD", ("Red")
         ORANGE = "OR", ("Orange")
         YELLOW = "YE", ("Yellow")
@@ -37,13 +37,12 @@ class Card(models.Model):
         DOTTED = 2, ("Dotted")
         DOUBLE = 3, ("Double")
 
-    border_style = models.CharField(
-        max_length=1,
+    border_style = models.IntegerField(
         choices=BorderStyleChoices.choices,
         default=BorderStyleChoices.SOLID,
     )
 
-    class FontFamilyChoices(models.CharField):
+    class FontFamilyChoices(models.TextChoices):
         SERIF = "SE", ("Serif")
         SANSERIF = "SS", ("Sans-Serif")
 
@@ -53,7 +52,7 @@ class Card(models.Model):
         default=FontFamilyChoices.SANSERIF,
     )
 
-    class FontStyleChoices(models.CharField):
+    class FontStyleChoices(models.TextChoices):
         ITALICS = "I", ("Italics")
         BOLD = "B", ("Bold")
         UNDERLINE = "U", ("Underline")
@@ -62,7 +61,7 @@ class Card(models.Model):
         max_length=1, choices=FontStyleChoices.choices, default=FontStyleChoices.ITALICS
     )
 
-    class TextAlignChoices(models.CharField):
+    class TextAlignChoices(models.TextChoices):
         LEFT = "L", ("Left")
         RIGHT = "R", ("Right")
         CENTER = "C", ("Center")
@@ -95,8 +94,7 @@ class Card(models.Model):
             ("Xtra Large"),
         )
 
-    font_size = models.IntegerChoices(
-        max_length=1,
+    font_size = models.IntegerField(
         choices=FontSizeChoices.choices,
         default=FontSizeChoices.MEDIUM,
     )
