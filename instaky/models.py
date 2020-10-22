@@ -53,12 +53,13 @@ class Card(models.Model):
     )
 
     class FontStyleChoices(models.TextChoices):
+        NORMAL = "N", ("Normal")
         ITALICS = "I", ("Italics")
         BOLD = "B", ("Bold")
         UNDERLINE = "U", ("Underline")
 
     font_style = models.CharField(
-        max_length=1, choices=FontStyleChoices.choices, default=FontStyleChoices.ITALICS
+        max_length=1, choices=FontStyleChoices.choices, default=FontStyleChoices.NORMAL
     )
 
     class TextAlignChoices(models.TextChoices):
