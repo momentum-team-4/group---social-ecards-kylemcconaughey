@@ -58,7 +58,7 @@ class CardViewSet(ModelViewSet):
         serializer = CardSerializer(cards, many=True, context={"request": request})
         return Response(serializer.data)
 
-    @action(detail=True, methods=["PUT"])
+    @action(detail=True, methods=["POST"])
     def image(self, request, pk, format=None):
         if "file" not in request.data:
             raise ParseError("Empty content")
