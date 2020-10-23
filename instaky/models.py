@@ -100,7 +100,7 @@ class Card(models.Model):
         default=FontSizeChoices.MEDIUM,
     )
 
-    # image = models.FileField()
+    image = models.ImageField(upload_to="post_images/", null=True, blank=True)
 
     favorited_by = models.ManyToManyField(
         to=User, related_name="favorited_cards", blank=True

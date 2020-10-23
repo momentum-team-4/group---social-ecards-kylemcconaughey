@@ -35,6 +35,7 @@ class CardSerializer(serializers.HyperlinkedModelSerializer):
             "is_public",
             "outer_text",
             "inner_text",
+            "image",
             "posted_at",
             "id",
             "url",
