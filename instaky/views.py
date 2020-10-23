@@ -69,6 +69,11 @@ class CardViewSet(ModelViewSet):
         post.image.save(file.name, file, save=True)
         return Response(status=201)
 
+    @action(detail=True)
+    def delete(self, request, format=None):
+        Card.image.delete(save=True)
+        return Response(status=204)
+
     def get_parser_classes(self):
         print(self.action)
         if self.action == "image":
