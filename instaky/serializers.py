@@ -8,7 +8,7 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ["user", "id", "url", "body", "posted_at", "card", "favorited_by"]
+        fields = ["user", "id", "url", "body", "posted_at", "card", "liked_by"]
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -45,6 +45,6 @@ class CardSerializer(serializers.HyperlinkedModelSerializer):
             "font_style",
             "text_align",
             "font_size",
-            "favorited_by",
+            "liked_by",
             "comments",
         ]

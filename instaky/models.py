@@ -102,9 +102,7 @@ class Card(models.Model):
 
     image = models.ImageField(upload_to="post_images/", null=True, blank=True)
 
-    favorited_by = models.ManyToManyField(
-        to=User, related_name="favorited_cards", blank=True
-    )
+    liked_by = models.ManyToManyField(to=User, related_name="liked_cards", blank=True)
 
     def __str__(self):
         return f"{self.id}"
@@ -120,8 +118,8 @@ class Comment(models.Model):
 
     posted_at = models.DateTimeField(auto_now_add=True)
 
-    favorited_by = models.ManyToManyField(
-        to=User, related_name="favorited_comments", blank=True
+    liked_by = models.ManyToManyField(
+        to=User, related_name="liked_comments", blank=True
     )
 
     def __str__(self):
