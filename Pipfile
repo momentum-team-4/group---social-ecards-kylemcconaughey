@@ -23,6 +23,8 @@ django-heroku = "*"
 gunicorn = "*"
 django-cors-headers = "*"
 pillow = "*"
+boto3 = "*"
+django-storages = "*"
 
 [requires]
 python_version = "3.8"
