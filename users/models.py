@@ -6,4 +6,6 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    pass
+    followers = models.ManyToManyField(
+        "self", on_delete=models.CASCADE, related_name="following"
+    )
