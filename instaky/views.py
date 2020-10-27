@@ -10,7 +10,12 @@ from rest_framework.viewsets import ModelViewSet
 from users.models import User
 
 from .models import Card, Comment
-from .serializers import CardSerializer, CommentSerializer, UserSerializer
+from .serializers import (
+    CardSerializer,
+    CommentSerializer,
+    UserDisplaySerializer,
+    UserSerializer,
+)
 
 """
 GET	/cards/	-	    list of cards from users you follow	
@@ -129,8 +134,10 @@ class UserViewSet(ModelViewSet):
     def followers(self, request, pk):
         queryset = User.objects.all()
         person = get_object_or_404(queryset, pk=pk)
-        followers = person.followers
-        serializer = UserSerializer(followers, many=True, context={"request": request})
+        followers = person.followers.all()
+        serializer = UserDisplaySerializer(
+            followers, many=True, context={"request": request}
+        )
         return Response(serializer.data)
 
     @action(detail=True, methods=["GET"])
@@ -138,13 +145,22 @@ class UserViewSet(ModelViewSet):
         queryset = User.objects.all()
         person = get_object_or_404(queryset, pk=pk)
         following = User.objects.filter(followers=person)
-        serializer = UserSerializer(following, many=True, context={"request": request})
+        serializer = UserDisplaySerializer(
+            following, many=True, context={"request": request}
+        )
         return Response(serializer.data)
 
     @action(detail=True, methods=["POST", "PUT", "PATCH"])
     def follow(self, request, pk):
-        queryset = User.objects.all()
-        person = get_object_or_404(queryset, pk=pk)
+        person = self.get_object()
         person.followers.add(self.request.user)
+        serializer = UserSerializer(person, context={"request": request})
+        return Response(serializer.data)
+
+    @action(detail=True, methods=["POST"])
+    def unfollow(self, request, pk):
+        person = self.get_object()
+        person.followers.remove(self.request.user)
+        person.save()
         serializer = UserSerializer(person, context={"request": request})
         return Response(serializer.data)

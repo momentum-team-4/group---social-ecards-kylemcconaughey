@@ -25,6 +25,12 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["username", "id", "url", "cards", "comments", "followers"]
 
 
+class UserDisplaySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ["username", "id", "url"]
+
+
 class CardSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.HyperlinkedRelatedField(read_only=True, view_name="user-detail")
     comments = CommentSerializer(many=True, read_only=True)
