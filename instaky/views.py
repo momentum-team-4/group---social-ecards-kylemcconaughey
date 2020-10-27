@@ -16,6 +16,7 @@ from .serializers import (
     UserSerializer,
 )
 
+
 """
 GET	/cards/	-	    list of all cards
 GET	/cards/mine/	-	list of cards you have made	||| could use /cards/?list=mine or something like that
@@ -55,13 +56,14 @@ class CardViewSet(ModelViewSet):
     ]
     parser_classes = [JSONParser, FileUploadParser]
 
-    def retrieve(self, request, pk=None):
-        queryset = (
-            Card.objects.all()
+    def retrieve(self, request, pk):
+        card = (
+            Card.objects.filter(pk=pk)
             .select_related("user")
-            .prefetch_related("liked_by", "comments")
-        )
-        card = get_object_or_404(queryset, pk=pk)
+            .prefetch_related(
+                "liked_by", "comments", "comments__user", "comments__liked_by"
+            )
+        ).first()
         serializer = CardSerializer(card, context={"request": request})
         return Response(serializer.data)
 
@@ -70,7 +72,9 @@ class CardViewSet(ModelViewSet):
         cards = (
             Card.objects.filter(user=self.request.user)
             .select_related("user")
-            .prefetch_related("liked_by", "comments")
+            .prefetch_related(
+                "liked_by", "comments", "comments__user", "comments__liked_by"
+            )
             .order_by("-posted_at")
         )
         serializer = CardSerializer(cards, many=True, context={"request": request})
@@ -81,7 +85,9 @@ class CardViewSet(ModelViewSet):
         cards = (
             Card.objects.all()
             .select_related("user")
-            .prefetch_related("liked_by", "comments")
+            .prefetch_related(
+                "liked_by", "comments", "comments__user", "comments__liked_by"
+            )
             .order_by("-posted_at")
         )
         serializer = CardSerializer(cards, many=True, context={"request": request})
@@ -92,7 +98,9 @@ class CardViewSet(ModelViewSet):
         cards = (
             Card.objects.filter(user__followers=self.request.user)
             .select_related("user")
-            .prefetch_related("liked_by", "comments")
+            .prefetch_related(
+                "liked_by", "comments", "comments__user", "comments__liked_by"
+            )
             .order_by("-posted_at")
         )
         serializer = CardSerializer(cards, many=True, context={"request": request})
@@ -181,7 +189,9 @@ class UserViewSet(ModelViewSet):
 
     @action(detail=True, methods=["GET"])
     def followers(self, request, pk):
-        followers = self.get_object().followers.all()
+        followers = (
+            User.objects.filter(pk=pk).prefetch_related("followers").first()
+        ).followers.all()
         serializer = UserDisplaySerializer(
             followers, many=True, context={"request": request}
         )
@@ -213,8 +223,11 @@ class UserViewSet(ModelViewSet):
         # return Response(serializer.data)
         return Response(status=204)
 
-    def retrieve(self, request, pk=None):
-        queryset = User.objects.all().prefetch_related("cards", "comments", "followers")
-        user = get_object_or_404(queryset, pk=pk)
+    def retrieve(self, request, pk):
+        user = (
+            User.objects.filter(pk=pk)
+            .prefetch_related("cards", "comments", "followers")
+            .first()
+        )
         serializer = UserSerializer(user, context={"request": request})
         return Response(serializer.data)
