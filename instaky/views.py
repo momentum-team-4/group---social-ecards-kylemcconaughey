@@ -1,11 +1,10 @@
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
-from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FileUploadParser, JSONParser
 from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAuthenticated
-from rest_framework.views import APIView, Response
+from rest_framework.views import Response
 from rest_framework.viewsets import ModelViewSet
 from users.models import User
 

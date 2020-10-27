@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Card, Comment
 from users.models import User
+from .models import Card, Comment
 
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
