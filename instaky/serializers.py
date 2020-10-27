@@ -26,7 +26,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CardSerializer(serializers.HyperlinkedModelSerializer):
-    user = serializers.StringRelatedField(read_only=True)
+    user = serializers.HyperlinkedRelatedField(read_only=True, view_name="user-detail")
     comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
