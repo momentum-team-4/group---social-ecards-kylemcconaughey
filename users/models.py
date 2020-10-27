@@ -6,4 +6,6 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    followers = models.ManyToManyField("self", related_name="following")
+    followers = models.ManyToManyField(
+        "self", related_name="following", symmetrical=False
+    )

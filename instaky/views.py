@@ -17,18 +17,22 @@ from .serializers import (
 )
 
 """
-GET	/cards/	-	    list of cards from users you follow	
-GET	/cards/me/	-	list of cards you have made	||| could use /cards/?list=mine or something like that
+GET	/cards/	-	    list of all cards
+GET	/cards/mine/	-	list of cards you have made	||| could use /cards/?list=mine or something like that
 GET	/cards/all/	-	list of cards for everyone  |||	could use /cards/?list=all
+GET /cards/following/ list of cards from people you follow
 
 POST /cards/	    card data	new card        |||  creates a card
 GET	/cards/:id/	-	data for card with specified id	
 PATCH /cards/:id/	card data	updated card    ||| updates the card with specified id
 DELETE /cards/:id/	-	-	                    ||| deletes card with specified id
+POST /cards/:id/image/ add a picture
+POST /cards/:id/delete_image/ removes the picture
+POST /cards/:id/like/ likes the card
 
-GET	/people/	-	list of all your "friends"	
-POST /people/:id/	user by id	user info       ||| add user as a friend
-DELETE /people/:id	-	-	                    ||| removes user with specified id from your friends
+GET	/users/	-	list of all people	
+POST /users/:id/	user by id	user info       ||| add user as a friend
+POST /users/:id/follow/     follows that user
 """
 
 
@@ -140,6 +144,7 @@ class UserViewSet(ModelViewSet):
     def followers(self, request, pk):
         queryset = User.objects.all()
         person = get_object_or_404(queryset, pk=pk)
+        # person = self.get_object()
         followers = person.followers.all()
         serializer = UserDisplaySerializer(
             followers, many=True, context={"request": request}
@@ -150,13 +155,14 @@ class UserViewSet(ModelViewSet):
     def following(self, request, pk):
         queryset = User.objects.all()
         person = get_object_or_404(queryset, pk=pk)
+        # person = self.get_object()
         following = User.objects.filter(followers=person)
         serializer = UserDisplaySerializer(
             following, many=True, context={"request": request}
         )
         return Response(serializer.data)
 
-    @action(detail=True, methods=["POST", "PUT", "PATCH"])
+    @action(detail=True, methods=["POST"])
     def follow(self, request, pk):
         person = self.get_object()
         person.followers.add(self.request.user)
@@ -168,5 +174,6 @@ class UserViewSet(ModelViewSet):
         person = self.get_object()
         person.followers.remove(self.request.user)
         person.save()
-        serializer = UserSerializer(person, context={"request": request})
-        return Response(serializer.data)
+        # serializer = UserSerializer(person, context={"request": request})
+        # return Response(serializer.data)
+        return Response(status=204)
