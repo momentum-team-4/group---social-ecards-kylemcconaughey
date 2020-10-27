@@ -134,7 +134,7 @@ class CardViewSet(ModelViewSet):
         return (
             Card.objects.all()
             .select_related("user")
-            .prefetch_related("liked_by", "comments")
+            .prefetch_related("liked_by", "comments", "comments__user")
             .order_by("-posted_at")
         )
 
@@ -161,6 +161,13 @@ class CommentViewSet(ModelViewSet):
         if not self.request.user.is_authenticated:
             raise PermissionDenied()
         serializer.save(user=self.request.user)
+
+    @action(detail=True, methods=["POST"], permission_classes=[IsAuthenticated])
+    def like(self, request, pk):
+        comment = self.get_object()
+        comment.liked_by.add(self.request.user)
+        comment.save()
+        return Response(status=201)
 
 
 class UserViewSet(ModelViewSet):
