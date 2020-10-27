@@ -59,6 +59,14 @@ class CardViewSet(ModelViewSet):
         serializer = CardSerializer(cards, many=True, context={"request": request})
         return Response(serializer.data)
 
+    @action(detail=False)
+    def following(self, request):
+        cards = Card.objects.filter(user__followers=self.request.user).order_by(
+            "-posted_at"
+        )
+        serializer = CardSerializer(cards, many=True, context={"request": request})
+        return Response(serializer.data)
+
     @action(detail=True, methods=["POST"])
     def image(self, request, pk, format=None):
         if "file" not in request.data:
@@ -127,7 +135,7 @@ class UserViewSet(ModelViewSet):
     def following(self, request, pk):
         queryset = User.objects.all()
         person = get_object_or_404(queryset, pk=pk)
-        following = User.objects.filter(user__followers=person)
+        following = User.objects.filter(followers=person)
         serializer = UserSerializer(following, many=True, context={"request": request})
         return Response(serializer.data)
 
