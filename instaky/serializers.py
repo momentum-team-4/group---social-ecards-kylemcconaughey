@@ -5,6 +5,7 @@ from .models import Card, Comment
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
+    liked_by = serializers.StringRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Comment
@@ -34,6 +35,7 @@ class UserDisplaySerializer(serializers.HyperlinkedModelSerializer):
 class CardSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
+    liked_by = serializers.StringRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Card

@@ -55,11 +55,22 @@ class CardViewSet(ModelViewSet):
     ]
     parser_classes = [JSONParser, FileUploadParser]
 
+    def retrieve(self, request, pk=None):
+        queryset = (
+            Card.objects.all()
+            .select_related("user")
+            .prefetch_related("liked_by", "comments")
+        )
+        card = get_object_or_404(queryset, pk=pk)
+        serializer = CardSerializer(card, context={"request": request})
+        return Response(serializer.data)
+
     @action(detail=False)
     def mine(self, request):
         cards = (
             Card.objects.filter(user=self.request.user)
-            .select_related("user", "comments", "liked_by")
+            .select_related("user")
+            .prefetch_related("liked_by", "comments")
             .order_by("-posted_at")
         )
         serializer = CardSerializer(cards, many=True, context={"request": request})
@@ -140,7 +151,11 @@ class CommentViewSet(ModelViewSet):
     ]
 
     def get_queryset(self):
-        return Comment.objects.all()
+        return (
+            Comment.objects.all()
+            .select_related("user", "card")
+            .prefetch_related("liked_by")
+        )
 
     def perform_create(self, serializer):
         if not self.request.user.is_authenticated:
@@ -155,14 +170,11 @@ class UserViewSet(ModelViewSet):
     ]
 
     def get_queryset(self):
-        return User.objects.all()
+        return User.objects.all().prefetch_related("cards", "comments", "followers")
 
     @action(detail=True, methods=["GET"])
     def followers(self, request, pk):
-        queryset = User.objects.all()
-        person = get_object_or_404(queryset, pk=pk)
-        # person = self.get_object()
-        followers = person.followers.all()
+        followers = self.get_object().followers.all()
         serializer = UserDisplaySerializer(
             followers, many=True, context={"request": request}
         )
@@ -172,7 +184,6 @@ class UserViewSet(ModelViewSet):
     def following(self, request, pk):
         queryset = User.objects.all()
         person = get_object_or_404(queryset, pk=pk)
-        # person = self.get_object()
         following = User.objects.filter(followers=person)
         serializer = UserDisplaySerializer(
             following, many=True, context={"request": request}
@@ -194,3 +205,9 @@ class UserViewSet(ModelViewSet):
         # serializer = UserSerializer(person, context={"request": request})
         # return Response(serializer.data)
         return Response(status=204)
+
+    def retrieve(self, request, pk=None):
+        queryset = User.objects.all().prefetch_related("cards", "comments", "followers")
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = UserSerializer(user, context={"request": request})
+        return Response(serializer.data)
