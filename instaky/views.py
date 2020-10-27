@@ -73,14 +73,16 @@ class CardViewSet(ModelViewSet):
             raise ParseError("Empty content")
 
         file = request.data["file"]
-        post = self.get_object()
+        card = self.get_object()
 
-        post.image.save(file.name, file, save=True)
+        card.image.save(file.name, file, save=True)
         return Response(status=201)
 
-    @action(detail=True)
-    def delete(self, request, format=None):
-        Card.image.delete(save=True)
+    @action(detail=True, methods=["POST"])
+    def delete_image(self, request, pk, format=None):
+        queryset = Card.objects.all()
+        card = get_object_or_404(queryset, pk=pk)
+        card.image.delete(save=True)
         return Response(status=204)
 
     def get_parser_classes(self):
