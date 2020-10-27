@@ -1,15 +1,16 @@
 from django.core.exceptions import PermissionDenied
-from rest_framework.exceptions import ParseError
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
+from django.shortcuts import get_object_or_404
 from rest_framework import permissions
-from .models import Card, Comment
-from .serializers import CommentSerializer, CardSerializer, UserSerializer
-from users.models import User
 from rest_framework.decorators import action
-from rest_framework.parsers import JSONParser, FileUploadParser
+from rest_framework.exceptions import ParseError
+from rest_framework.parsers import FileUploadParser, JSONParser
+from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAuthenticated
 from rest_framework.views import APIView, Response
+from rest_framework.viewsets import ModelViewSet
+from users.models import User
 
+from .models import Card, Comment
+from .serializers import CardSerializer, CommentSerializer, UserSerializer
 
 """
 GET	/cards/	-	    list of cards from users you follow	
@@ -113,3 +114,27 @@ class UserViewSet(ModelViewSet):
 
     def get_queryset(self):
         return User.objects.all()
+
+    @action(detail=True, methods=["GET"])
+    def followers(self, request, pk):
+        queryset = User.objects.all()
+        person = get_object_or_404(queryset, pk=pk)
+        followers = person.followers
+        serializer = UserSerializer(followers, many=True, context={"request": request})
+        return Response(serializer.data)
+
+    @action(detail=True, methods=["GET"])
+    def following(self, request, pk):
+        queryset = User.objects.all()
+        person = get_object_or_404(queryset, pk=pk)
+        following = User.objects.filter(user__followers=person)
+        serializer = UserSerializer(following, many=True, context={"request": request})
+        return Response(serializer.data)
+
+    @action(detail=True, methods=["POST", "PUT", "PATCH"])
+    def follow(self, request, pk):
+        queryset = User.objects.all()
+        person = get_object_or_404(queryset, pk=pk)
+        person.followers.add(self.request.user)
+        serializer = UserSerializer(person, context={"request": request})
+        return Response(serializer.data)
