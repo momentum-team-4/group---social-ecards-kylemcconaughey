@@ -57,20 +57,32 @@ class CardViewSet(ModelViewSet):
 
     @action(detail=False)
     def mine(self, request):
-        cards = Card.objects.filter(user=self.request.user).order_by("-posted_at")
+        cards = (
+            Card.objects.filter(user=self.request.user)
+            .select_related("user", "comments", "liked_by")
+            .order_by("-posted_at")
+        )
         serializer = CardSerializer(cards, many=True, context={"request": request})
         return Response(serializer.data)
 
     @action(detail=False)
     def all(self, request):
-        cards = Card.objects.all()
+        cards = (
+            Card.objects.all()
+            .select_related("user")
+            .prefetch_related("liked_by", "comments")
+            .order_by("-posted_at")
+        )
         serializer = CardSerializer(cards, many=True, context={"request": request})
         return Response(serializer.data)
 
     @action(detail=False)
     def following(self, request):
-        cards = Card.objects.filter(user__followers=self.request.user).order_by(
-            "-posted_at"
+        cards = (
+            Card.objects.filter(user__followers=self.request.user)
+            .select_related("user")
+            .prefetch_related("liked_by", "comments")
+            .order_by("-posted_at")
         )
         serializer = CardSerializer(cards, many=True, context={"request": request})
         return Response(serializer.data)
@@ -108,7 +120,12 @@ class CardViewSet(ModelViewSet):
         return [JSONParser]
 
     def get_queryset(self):
-        return Card.objects.all().order_by("-posted_at")
+        return (
+            Card.objects.all()
+            .select_related("user")
+            .prefetch_related("liked_by", "comments")
+            .order_by("-posted_at")
+        )
 
     def perform_create(self, serializer):
         if self.request.user.is_authenticated:
