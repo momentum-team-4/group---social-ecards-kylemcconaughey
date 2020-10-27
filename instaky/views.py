@@ -89,6 +89,13 @@ class CardViewSet(ModelViewSet):
         card.image.delete(save=True)
         return Response(status=204)
 
+    @action(detail=True, methods=["POST"], permission_classes=[IsAuthenticated])
+    def like(self, request, pk):
+        card = self.get_object()
+        card.liked_by.add(self.request.user)
+        card.save()
+        return Response(status=201)
+
     def get_parser_classes(self):
         print(self.action)
         if self.action == "image":
