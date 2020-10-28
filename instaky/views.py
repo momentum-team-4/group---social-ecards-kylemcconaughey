@@ -77,6 +77,10 @@ class CardViewSet(ModelViewSet):
             )
             .order_by("-posted_at")
         )
+        page = self.paginate_queryset(cards)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         serializer = CardSerializer(cards, many=True, context={"request": request})
         return Response(serializer.data)
 
@@ -90,6 +94,10 @@ class CardViewSet(ModelViewSet):
             )
             .order_by("-posted_at")
         )
+        page = self.paginate_queryset(cards)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         serializer = CardSerializer(cards, many=True, context={"request": request})
         return Response(serializer.data)
 
@@ -103,6 +111,10 @@ class CardViewSet(ModelViewSet):
             )
             .order_by("-posted_at")
         )
+        page = self.paginate_queryset(cards)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         serializer = CardSerializer(cards, many=True, context={"request": request})
         return Response(serializer.data)
 
