@@ -44,11 +44,15 @@ class CardSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
     liked_by = serializers.StringRelatedField(many=True, read_only=True)
+    user_id = serializers.HyperlinkedRelatedField(
+        view_name="user-detail", read_only=True
+    )
 
     class Meta:
         model = Card
         fields = [
             "user",
+            "user_id",
             "is_public",
             "outer_text",
             "inner_text",
