@@ -230,7 +230,7 @@ class UserViewSet(ModelViewSet):
         serializer = UserSerializer(user, context={"request": request})
         return Response(serializer.data)
 
-    @action(detail=True, methods=["POST"])
+    @action(detail=True, methods=["POST", "PUT"])
     def image(self, request, pk, format=None):
         if "file" not in request.data:
             raise ParseError("Empty content")
