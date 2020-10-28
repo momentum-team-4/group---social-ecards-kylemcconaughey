@@ -219,8 +219,6 @@ class UserViewSet(ModelViewSet):
         person = self.get_object()
         person.followers.remove(self.request.user)
         person.save()
-        # serializer = UserSerializer(person, context={"request": request})
-        # return Response(serializer.data)
         return Response(status=204)
 
     def retrieve(self, request, pk):
