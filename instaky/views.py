@@ -229,3 +229,21 @@ class UserViewSet(ModelViewSet):
         )
         serializer = UserSerializer(user, context={"request": request})
         return Response(serializer.data)
+
+    @action(detail=True, methods=["POST"])
+    def image(self, request, pk, format=None):
+        if "file" not in request.data:
+            raise ParseError("Empty content")
+
+        file = request.data["file"]
+        user = self.get_object()
+
+        user.profile_picture.save(file.name, file, save=True)
+        return Response(status=201)
+
+    @action(detail=True, methods=["POST"])
+    def delete_image(self, request, pk, format=None):
+        queryset = User.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        user.profile_picture.delete(save=True)
+        return Response(status=204)

@@ -23,7 +23,15 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ["username", "id", "url", "cards", "comments", "followers"]
+        fields = [
+            "username",
+            "id",
+            "url",
+            "profile_picture",
+            "cards",
+            "comments",
+            "followers",
+        ]
 
 
 class UserDisplaySerializer(serializers.HyperlinkedModelSerializer):
