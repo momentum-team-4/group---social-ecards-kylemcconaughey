@@ -221,14 +221,14 @@ class UserViewSet(ModelViewSet):
 
     @action(detail=True, methods=["POST"])
     def follow(self, request, pk):
-        person = self.get_object()
+        person = User.objects.filter(pk=pk).first()
         person.followers.add(self.request.user)
         serializer = UserSerializer(person, context={"request": request})
         return Response(serializer.data)
 
     @action(detail=True, methods=["POST"])
     def unfollow(self, request, pk):
-        person = self.get_object()
+        person = User.objects.filter(pk=pk).first()
         person.followers.remove(self.request.user)
         person.save()
         return Response(status=204)
